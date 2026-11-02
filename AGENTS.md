@@ -1,8 +1,9 @@
 # Instructions pour un agent travaillant sur ce dépôt
 
 Ce dépôt ne contient **aucune skill ni aucun script** : seulement
-`.claude-plugin/marketplace.json` (bundles Claude Code) et de la documentation Markdown. Les
-skills vivent dans `IA-Generative/agent-skills` et dans des dépôts tiers.
+`.claude-plugin/marketplace.json` (bundles Claude Code), de la documentation Markdown et un
+fichier de test (`tests/marketplace.test.mjs`). Les skills vivent dans `IA-Generative/agent-skills`
+et dans des dépôts tiers.
 
 ## Invariants
 
@@ -18,5 +19,11 @@ skills vivent dans `IA-Generative/agent-skills` et dans des dépôts tiers.
 
 ```bash
 claude plugin validate .
+MISHELL_ONLINE=1 MISHELL_CLAUDE=1 node --test tests/*.test.mjs
 git status --short
 ```
+
+Sans les variables, seuls les contrôles hors ligne tournent (structure, sha complets,
+dépendances). `MISHELL_ONLINE` vérifie que chaque `sha` existe en amont ; `MISHELL_CLAUDE`
+installe les bundles dans une config Claude Code isolée (`CLAUDE_CONFIG_DIR` temporaire, ni login
+ni appel modèle) et contrôle les skills exposées par chaque plugin.

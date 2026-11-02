@@ -21,7 +21,10 @@ on modifie la **composition des bundles** ([`.claude-plugin/marketplace.json`](.
 5. Vérifier :
    ```bash
    claude plugin validate .
+   MISHELL_ONLINE=1 MISHELL_CLAUDE=1 node --test tests/*.test.mjs
    ```
+   Le second contrôle vérifie que chaque `sha` existe en amont et que les bundles s'installent
+   (config Claude Code temporaire, sans toucher à la vôtre).
 
 ## Mettre à jour le pin d'agent-skills
 
