@@ -63,64 +63,30 @@
     "bash": {
       "*": "ask",
 
-      // ALLOW: read-only commands and the checks of this repository
+      // ALLOW: read-only commands
       "git status*": "allow",
       "git diff*": "allow",
       "git log*": "allow",
       "ls*": "allow",
       "grep *": "allow",
-      "node --test*": "allow",
-      "claude plugin validate*": "allow",
-      "opencode --version": "allow",
-      "opencode debug config*": "allow",
-      "opencode debug skill*": "allow",
-
-      // ASK: publishes work (never on main: delivery by PR)
-      "git push*": "ask",
 
       // DENY: destructive or irreversible
       "git push --force*": "deny",
       "git push -f*": "deny",
       "git reset --hard*": "deny",
-      "git clean*": "deny",
       "rm -rf*": "deny",
       "sudo*": "deny",
-      "curl * | *": "deny",
-      "wget * | *": "deny"
+      "curl * | *": "deny"
     },
 
-    // Files: read everything except secrets, edit without asking only the documentation.
-    "read": {
-      "*": "allow",
-      "*.env": "deny",
-      "*.env.*": "deny",
-      "*.env.example": "allow"
-    },
-    "edit": {
-      "*": "ask",
-      "README.md": "allow",
-      "docs/*.md": "allow",
-      "*.env": "deny",
-      "*.env.*": "deny"
-    },
+    // Secrets: never read or edited.
+    "read": { "*.env": "deny", "*.env.*": "deny", "*.env.example": "allow" },
+    "edit": { "*.env": "deny", "*.env.*": "deny" },
 
-    // Network and folders outside the project: "external_directory" defaults to "allow".
-    "webfetch": "ask",
+    // Folders outside the project ("allow" by default).
     "external_directory": "ask",
 
-    // Skills: those used only by MirAI projects do not run without approval.
-    "skill": {
-      "*": "allow",
-      "mirai-*": "ask"
-    }
+    // Skills used only by MirAI projects do not run without approval.
+    "skill": { "mirai-*": "ask" }
   }
-
-  // ── 3. Per-agent variant (optional): uncomment to tighten the "build" agent ─────────────────
-  // ,"agent": {
-  //   "build": {
-  //     "permission": {
-  //       "bash": { "*": "ask", "git *": "allow", "git push*": "deny" }
-  //     }
-  //   }
-  // }
 }
