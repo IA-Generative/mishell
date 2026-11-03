@@ -23,7 +23,7 @@ claude plugin install mishell-more@mishell     # audit, accreditation, ANSSI, RG
 - `IA-Generative/mishell` is the source; `mishell` is the name of the marketplace.
 - `--scope local`: this project only, without changing versioned files (default `user`: all your
   sessions; `project`: shared with the team through git).
-- Update: `claude plugin marketplace update mishell`, then `/reload-plugins`.
+- Update and removal: [Update](#update) and [Uninstall](#uninstall).
 
 ## OpenCode
 
@@ -56,8 +56,8 @@ its dependencies. The extras:
   with instructions, agents and commands: [the full DSO kit](#full-dso-kit).
 - A plugin is downloaded by OpenCode into its cache, nothing is written in the project. It **follows
   `main`**; to pin a version, add `#<sha>` to the URL (`….git#<sha>`).
-- Update: delete the plugin folder in `~/.cache/opencode/packages/`, then restart OpenCode. Restart
-  it after any change to `opencode.json` too.
+- Restart OpenCode after any change to `opencode.json`. Update and removal: [Update](#update) and
+  [Uninstall](#uninstall).
 - Skill names are flat under OpenCode: do not load the same skill through two routes
   ([duplicates](#avoid-duplicates)).
 
@@ -155,6 +155,55 @@ git clone https://github.com/<repository>.git <folder> && git -C <folder> checko
 
 `<repository>`, `<sha>` and `<skills path>`: the `source` fields (`repo` or `url`, `sha`, `path`) and
 `skills` of the plugin concerned in [`.claude-plugin/marketplace.json`](../.claude-plugin/marketplace.json).
+
+## Update
+
+A new version reaches you only after a change is merged in this repository (the sources are
+[pinned](#pinning)).
+
+### Claude Code
+
+```bash
+claude plugin marketplace update mishell                       # fetch the new catalogue
+claude plugin update mishell-base@mishell --scope local        # same scope as at install
+```
+
+Restart Claude Code to apply. `claude plugin list` shows the version (commit) of each plugin and of
+its dependencies.
+
+### OpenCode
+
+1. Edit `opencode.jsonc` from this repository, or move the `#<sha>` of your own `opencode.json` to the
+   new commit of [`marketplace.json`](../.claude-plugin/marketplace.json).
+2. A plugin that follows `main` (without `#<sha>`) is not refreshed by that alone: delete its folder
+   in `~/.cache/opencode/packages/` (the one whose name starts with the plugin name).
+3. For `skills.urls`, if a skill keeps its old content after the `<sha>` of the URL changed, delete
+   its folder in `~/.cache/opencode/skills/`.
+4. Restart OpenCode, then check with `opencode debug skill`.
+
+## Uninstall
+
+### Claude Code
+
+```bash
+claude plugin uninstall mishell-more@mishell --scope local --prune
+claude plugin uninstall mishell-base@mishell --scope local --prune
+claude plugin marketplace remove mishell                       # optional
+```
+
+- `--scope`: the one used at install (`user` if you did not pass one).
+- `--prune` also removes the dependencies installed with the bundle (`fabnum-cicd-skills`, …);
+  without it they stay.
+- `marketplace remove` forgets the catalogue and its plugins on this machine. To use them again,
+  run `marketplace add` and `install` again.
+
+### OpenCode
+
+1. Remove the entries from your `opencode.json`: the `plugin` entries, the `skills.urls` and the
+   `skills.paths` that came from here.
+2. Restart OpenCode. Nothing else is installed.
+3. Optional clean-up: the downloaded copies in `~/.cache/opencode/packages/` and
+   `~/.cache/opencode/skills/`, and the clone of `etalab-ia/skills` if you made one.
 
 ## Avoid duplicates
 
