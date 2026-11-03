@@ -1,37 +1,47 @@
 # mishell
 
-Bundles de skills de l'équipe IA-Generative pour les agents de code. Ce dépôt ne contient **aucune
-skill** : il choisit lesquelles installer, chacune **épinglée par commit**, depuis
-[`agent-skills`](https://github.com/IA-Generative/agent-skills) (nos skills) et des dépôts tiers.
+Skill bundles from the IA-Generative team for coding agents, for both
+[Claude Code](https://claude.com/claude-code) and [OpenCode](https://opencode.ai). This repository
+contains **no skill**: it chooses which ones to install, each **pinned to a commit**, from
+[`agent-skills`](https://github.com/IA-Generative/agent-skills) (our skills) and from third-party
+repositories.
 
-Dépôt **public** : aucune connexion GitHub requise. Chaque étape s'ajoute à la précédente.
-Les commandes sont données pour Claude Code et pour OpenCode.
+The repository is **public**: no GitHub login is required. Each step builds on the previous one; open
+the one you need.
 
-## 1. Les indispensables : principes de travail
+<details>
+<summary><b>1. The essentials: working principles</b></summary>
 
-Quatre principes courts d'après un post de Karpathy (dépôt tiers, hors bundles) :
+&nbsp;
+
+Four short principles based on a post by Karpathy (third-party repository, outside the bundles):
 
 ```bash
+# Claude Code
 claude plugin marketplace add multica-ai/andrej-karpathy-skills
 claude plugin install andrej-karpathy-skills@karpathy-skills --scope local
 ```
 
-Facultatif, une méthode de développement complète (TDD, débogage, revue) — une seule des deux,
-elles se recoupent : `mattpocock/skills` (à la carte) ou `obra/superpowers` (enchaînée).
+Optional: a complete development method (TDD, debugging, review). Take only one of the two, they
+overlap: `mattpocock/skills` (pick and choose) or `obra/superpowers` (chained).
 
 ```bash
+# Claude Code
 claude plugin install mattpocock-skills@claude-plugins-official --scope local
-# ou
+# or
 claude plugin install superpowers@claude-plugins-official --scope local
 ```
 
-Commandes OpenCode, commits revus, licences : [docs/sources-externes.md](docs/sources-externes.md).
+OpenCode commands, reviewed commits and licences: [docs/external-sources.md](docs/external-sources.md).
 
-## 2. Je démarre un projet : `mishell-base`
+</details>
 
-Le socle Fabrique Numérique : CI/CD, conventions, stack, API REST, déploiement.
-Sous OpenCode : copier [opencode.jsonc](opencode.jsonc) dans votre `opencode.json` (`mishell-base` y est actif
-par défaut ; détail dans [docs/installation.md](docs/installation.md#opencode)).
+<details open>
+<summary><b>2. Starting a project: <code>mishell-base</code></b></summary>
+
+&nbsp;
+
+The Fabrique Numérique foundation: CI/CD, conventions, stack, REST API, deployment.
 
 ```bash
 # Claude Code
@@ -39,12 +49,21 @@ claude plugin marketplace add IA-Generative/mishell
 claude plugin install mishell-base@mishell --scope local
 ```
 
-`--scope local` : ce projet seulement, sans modifier les fichiers versionnés (défaut `user` :
-toutes vos sessions ; `project` : partagé avec l'équipe via git).
+**OpenCode**: copy [opencode.jsonc](opencode.jsonc) into your `opencode.json`. `mishell-base` is
+enabled there by default; details in [docs/installation.md](docs/installation.md#opencode).
 
-## 3. Le projet avance : `mishell-more`
+`--scope local` means this project only, without changing any versioned file (default `user`: all
+your sessions; `project`: shared with the team through git).
 
-Audits (pen-test, red-team, RAG), DAT d'homologation, MirAI, guides ANSSI, RGAA, skills DSO / Cloud Pi Native.
+</details>
+
+<details>
+<summary><b>3. The project grows: <code>mishell-more</code></b></summary>
+
+&nbsp;
+
+Audits (pen-test, red-team, RAG), DAT security accreditation files, MirAI, ANSSI guides, RGAA,
+DSO / Cloud Pi Native skills.
 
 ```bash
 # Claude Code
@@ -52,24 +71,31 @@ claude plugin install mishell-more@mishell --scope local
 ```
 
 ```json
-// OpenCode : opencode.json (audit, DAT, MirAI ; DSO, ANSSI, RGAA : voir docs/installation.md)
+// OpenCode: opencode.json (audit, DAT, MirAI; DSO, ANSSI, RGAA: see docs/installation.md)
 { "plugin": [["agent-skills@git+https://github.com/IA-Generative/agent-skills.git",
               { "groups": ["audit", "dat", "mirai"] }]] }
 ```
 
-Une seule famille, par exemple les skills DSO : [installation à la carte](docs/installation.md#à-la-carte).
+Only one family, for example the DSO skills: [pick and choose](docs/installation.md#pick-and-choose).
 
-## Contenu
+</details>
+
+<details>
+<summary><b>What is in each bundle</b></summary>
+
+&nbsp;
 
 | Bundle | Source | Skills |
 |---|---|---|
-| `mishell-base` | `dnum-mi/fabnum-cicd`, `dnum-mi/transversal-doc` | CI/CD, conventions, stack, API REST, déploiement |
-| `mishell-more` | `agent-skills` (groupes `audit`, `dat`, `mirai`) | `audit-repo-ouverture`, `audit-pentest-prep`, `audit-redteam`, `audit-rag`, `audit-tool-owui`, `dat-generation`, `dat-word`, `mirai-check-service-names`, `mirai-smoke-test` |
-| | `etalab-ia/skills`, `dnum-mi/starter-kit-opencode` | guides ANSSI, RGAA, DSO / Cloud Pi Native |
+| `mishell-base` | `dnum-mi/fabnum-cicd`, `dnum-mi/transversal-doc` | CI/CD, conventions, stack, REST API, deployment |
+| `mishell-more` | `agent-skills` (groups `audit`, `dat`, `mirai`) | `audit-repo-ouverture`, `audit-pentest-prep`, `audit-redteam`, `audit-rag`, `audit-tool-owui`, `dat-generation`, `dat-word`, `mirai-check-service-names`, `mirai-smoke-test` |
+| | `etalab-ia/skills`, `dnum-mi/starter-kit-opencode` | ANSSI guides, RGAA, DSO / Cloud Pi Native |
+
+</details>
 
 ## Documentation
 
-- [docs/installation.md](docs/installation.md) : installation par agent (Claude Code, OpenCode), à la carte
-- [docs/sources-externes.md](docs/sources-externes.md) : méthodes de développement recommandées
-- [CONTRIBUTING.md](CONTRIBUTING.md) : modifier un bundle, mettre à jour un pin
-- [AGENTS.md](AGENTS.md) : invariants du dépôt
+- [docs/installation.md](docs/installation.md): installation per agent (Claude Code, OpenCode), pick and choose
+- [docs/external-sources.md](docs/external-sources.md): recommended development methods
+- [CONTRIBUTING.md](CONTRIBUTING.md): change a bundle, update a pin
+- [AGENTS.md](AGENTS.md): repository invariants

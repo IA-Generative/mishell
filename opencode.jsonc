@@ -1,69 +1,69 @@
 {
-  // Configuration OpenCode pour les skills IA-Generative. À COPIER dans l'opencode.json de votre
-  // projet (ou dans ~/.config/opencode/opencode.json). Par défaut : `mishell-base`, le socle
-  // Fabrique Numérique (CI/CD, conventions, stack, API REST, déploiement), épinglé par commit.
-  // Détail et prérequis : docs/installation.md. OpenCode 1.x (en 2.x : "plugins" et "skills" changent
-  // de forme, voir https://opencode.ai/docs/migrate-v1). Relancer OpenCode après toute modification.
+  // OpenCode configuration for the IA-Generative skills. COPY it into the opencode.json of your
+  // project (or into ~/.config/opencode/opencode.json). Default: `mishell-base`, the Fabrique
+  // Numérique foundation (CI/CD, conventions, stack, REST API, deployment), pinned by commit.
+  // Details and requirements: docs/installation.md. OpenCode 1.x (in 2.x, "plugins" and "skills"
+  // change shape, see https://opencode.ai/docs/migrate-v1). Restart OpenCode after any change.
   //
-  // OpenCode charge ce fichier aussi quand on le lance DANS ce dépôt : il télécharge alors les deux
-  // plugins de la section 1 dans son cache (rien n'est écrit dans le projet).
+  // OpenCode also loads this file when it is started INSIDE this repository: it then downloads
+  // the sources of section 1 into its cache (nothing is written in the project).
   "$schema": "https://opencode.ai/config.json",
 
   // ── 1. Skills ──────────────────────────────────────────────────────────────────────────────────
-  // Équivalents des plugins Claude Code de la marketplace mishell. Ne pas charger la même skill par
-  // deux voies (les noms de skills sont à plat sous OpenCode). Les "#<sha>" ci-dessous sont ceux de
-  // .claude-plugin/marketplace.json (un test vérifie qu'ils restent identiques).
+  // Equivalents of the Claude Code plugins of the mishell marketplace. Do not load the same skill
+  // through two routes (skill names are flat under OpenCode). The "#<sha>" below are those of
+  // .claude-plugin/marketplace.json (a test checks that they stay identical).
   "plugin": [
 
-    // mishell-base (ACTIF) = fabnum-cicd-skills (ici, plugin) + fabnum-transversal-skills (plus bas,
-    // dans "skills.urls" : le plugin transversal-doc installerait tout le site de documentation).
+    // mishell-base (ENABLED) = fabnum-cicd-skills (here, as a plugin) + fabnum-transversal-skills
+    // (below, in "skills.urls": the transversal-doc plugin would install the whole documentation site).
     "fabnum-cicd@git+https://github.com/dnum-mi/fabnum-cicd.git#a8a75a378a3e6ef70a51081bc6d4c07da229ac69"
 
-    // ── Compléments : décommenter (et ajouter une virgule à l'entrée qui précède) ──
+    // ── Extras: uncomment (and add a comma to the entry before) ──
     //
-    // A. Skills de l'équipe (agent-skills) = mishell-agent-skills (audit, dat, mirai) ; sans "groups", tout (dont dev, repo).
-    //    "groups" : dev, audit, repo, dat, mirai (défaut : tous). "#<sha>" fige une version ;
-    //    sans lui, le plugin suit main.
+    // A. The team's skills (agent-skills) = mishell-agent-skills (audit, dat, mirai); without
+    //    "groups", everything (including dev and repo). "groups": dev, audit, repo, dat, mirai
+    //    (default: all). "#<sha>" pins a version; without it, the plugin follows main.
     // ,["agent-skills@git+https://github.com/IA-Generative/agent-skills.git#<sha>",
     //   { "groups": ["audit", "dat", "mirai"] }]
     //
-    // B. Kit Fabrique Numérique / Cloud Pi Native complet : instructions, skills, agents, commandes
-    //    (/livrer, /deployer-cpin). "groups" : dev, dso (défaut : dev). Suit main ; "#<sha>" pour
-    //    figer. Ne pas combiner avec C (skills DSO chargées deux fois).
+    // B. Full Fabrique Numérique / Cloud Pi Native kit: instructions, skills, agents, commands
+    //    (/livrer, /deployer-cpin). "groups": dev, dso (default: dev). Follows main; "#<sha>" to
+    //    pin. Do not combine with C (DSO skills loaded twice).
     // ,["starter-kit-opencode@git+https://github.com/dnum-mi/starter-kit-opencode.git",
     //   { "groups": ["dso"] }]
   ],
 
-  // Skills chargées par URL : OpenCode lit l'index.json du dossier et les met dans son cache.
-  // Garder le "/" final. Le "<sha>" est celui de la marketplace (un test le vérifie).
+  // Skills loaded by URL: OpenCode reads the folder's index.json and caches them.
+  // Keep the trailing "/". The "<sha>" is the marketplace one (a test checks it).
   "skills": {
     "urls": [
-      // mishell-base (ACTIF), moitié transversal-doc.
+      // mishell-base (ENABLED), transversal-doc half.
       "https://raw.githubusercontent.com/dnum-mi/transversal-doc/4c2e2a75b20970fee64471f634e9dc7c9cb5e64d/.agents/skills/"
 
-      // ── Complément C (décommenter, avec la virgule qui précède) : skills DSO seules
-      //    (= starter-dso-skills), <sha> = le commit de starter-dso-skills dans marketplace.json.
+      // ── Extra C (uncomment, with the comma before): DSO skills only
+      //    (= starter-dso-skills), <sha> = the starter-dso-skills commit in marketplace.json.
       // ,"https://raw.githubusercontent.com/dnum-mi/starter-kit-opencode/<sha>/.agents/skills/dso/"
     ]
 
-    // ── Complément D (décommenter, avec la virgule qui précède) : guides ANSSI et RGAA
-    //    (etalab-ia/skills), sans plugin ni index : cloner au commit épinglé, puis donner les
-    //    dossiers de skills (chemins absolus).
+    // ── Extra D (uncomment, with the comma before): ANSSI guides and RGAA (etalab-ia/skills),
+    //    no plugin and no index: clone at the pinned commit, then give the skills folders
+    //    (absolute paths).
     //      git clone https://github.com/etalab-ia/skills.git ~/skills/etalab
     //      git -C ~/skills/etalab checkout <sha>
     // ,"paths": [
-    //   "/home/<vous>/skills/etalab/skills/anssi-guides",
-    //   "/home/<vous>/skills/etalab/skills/rgaa"
+    //   "/home/<you>/skills/etalab/skills/anssi-guides",
+    //   "/home/<you>/skills/etalab/skills/rgaa"
     // ]
   },
 
-  // ── 2. Permissions : "allow" (sans demander), "ask" (demander), "deny" (interdit) ───────────────
-  // La DERNIÈRE règle qui correspond l'emporte : le "*" d'abord, les exceptions ensuite.
+  // ── 2. Permissions: "allow" (no prompt), "ask" (prompt), "deny" (forbidden) ─────────────────────
+  // The LAST matching rule wins: the "*" first, the exceptions after.
   "permission": {
     "bash": {
       "*": "ask",
 
-      // ALLOW : lecture seule et vérifications de ce dépôt
+      // ALLOW: read-only commands and the checks of this repository
       "git status*": "allow",
       "git diff*": "allow",
       "git log*": "allow",
@@ -75,10 +75,10 @@
       "opencode debug config*": "allow",
       "opencode debug skill*": "allow",
 
-      // ASK : publie du travail (jamais sur main : livraison par PR)
+      // ASK: publishes work (never on main: delivery by PR)
       "git push*": "ask",
 
-      // DENY : destructeur ou irréversible
+      // DENY: destructive or irreversible
       "git push --force*": "deny",
       "git push -f*": "deny",
       "git reset --hard*": "deny",
@@ -89,7 +89,7 @@
       "wget * | *": "deny"
     },
 
-    // Fichiers : tout lire sauf les secrets, ne modifier sans demander que la documentation.
+    // Files: read everything except secrets, edit without asking only the documentation.
     "read": {
       "*": "allow",
       "*.env": "deny",
@@ -104,18 +104,18 @@
       "*.env.*": "deny"
     },
 
-    // Réseau et dossiers hors projet : "external_directory" vaut "allow" par défaut.
+    // Network and folders outside the project: "external_directory" defaults to "allow".
     "webfetch": "ask",
     "external_directory": "ask",
 
-    // Skills : celles qui ne servent qu'aux projets MirAI ne partent pas sans accord.
+    // Skills: those used only by MirAI projects do not run without approval.
     "skill": {
       "*": "allow",
       "mirai-*": "ask"
     }
   }
 
-  // ── 3. Variante par agent (facultatif) : décommenter pour resserrer l'agent "build" ────────────
+  // ── 3. Per-agent variant (optional): uncomment to tighten the "build" agent ─────────────────
   // ,"agent": {
   //   "build": {
   //     "permission": {

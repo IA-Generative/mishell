@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-marketplace.json",
   "name": "mishell",
-  "description": "Bundles de skills IA-Generative : socle Fabrique Numérique, sécurité, homologation",
+  "description": "IA-Generative skill bundles: Fabrique Numérique foundation, security, accreditation",
   "owner": {
     "name": "IA-Generative",
     "url": "https://github.com/IA-Generative/mishell"
@@ -9,7 +9,7 @@
   "plugins": [
     {
       "name": "mishell-agent-skills",
-      "description": "Skills d'IA-Generative/agent-skills pour un projet qui avance : audit, DAT d'homologation, MirAI (sans les groupes dev et repo)",
+      "description": "IA-Generative/agent-skills for a growing project: audit, DAT accreditation, MirAI (without the dev and repo groups)",
       "source": {
         "source": "github",
         "repo": "IA-Generative/agent-skills",
@@ -23,7 +23,7 @@
     },
     {
       "name": "fabnum-cicd-skills",
-      "description": "Skills CI/CD Fabrique Numérique (dnum-mi/fabnum-cicd)",
+      "description": "Fabrique Numérique CI/CD skills (dnum-mi/fabnum-cicd)",
       "source": {
         "source": "github",
         "repo": "dnum-mi/fabnum-cicd",
@@ -35,7 +35,7 @@
     },
     {
       "name": "fabnum-transversal-skills",
-      "description": "Skills transverses Fabrique Numérique : conventions, stack, API REST, déploiement (dnum-mi/transversal-doc)",
+      "description": "Fabrique Numérique cross-cutting skills: conventions, stack, REST API, deployment (dnum-mi/transversal-doc)",
       "source": {
         "source": "github",
         "repo": "dnum-mi/transversal-doc",
@@ -47,7 +47,7 @@
     },
     {
       "name": "etalab-anssi-guides",
-      "description": "Guides ANSSI (etalab-ia/skills)",
+      "description": "ANSSI guides (etalab-ia/skills)",
       "source": {
         "source": "git-subdir",
         "url": "etalab-ia/skills",
@@ -57,7 +57,7 @@
     },
     {
       "name": "etalab-rgaa",
-      "description": "Référentiel RGAA d'accessibilité (etalab-ia/skills)",
+      "description": "RGAA accessibility reference (etalab-ia/skills)",
       "source": {
         "source": "git-subdir",
         "url": "etalab-ia/skills",
@@ -67,7 +67,7 @@
     },
     {
       "name": "starter-dso-skills",
-      "description": "Skills DSO / Cloud Pi Native du starter-kit (dnum-mi/starter-kit-opencode)",
+      "description": "DSO / Cloud Pi Native skills of the starter kit (dnum-mi/starter-kit-opencode)",
       "source": {
         "source": "github",
         "repo": "dnum-mi/starter-kit-opencode",
@@ -80,7 +80,7 @@
     {
       "name": "mishell-base",
       "source": "./",
-      "description": "Base du développeur : skills CI/CD et transverses Fabrique Numérique",
+      "description": "Developer foundation: Fabrique Numérique CI/CD and cross-cutting skills",
       "skills": [],
       "dependencies": [
         "fabnum-cicd-skills",
@@ -90,7 +90,7 @@
     {
       "name": "mishell-more",
       "source": "./",
-      "description": "Compléments : audit, DAT et MirAI, guides ANSSI, RGAA, skills DSO",
+      "description": "Extras: audit, DAT and MirAI, ANSSI guides, RGAA, DSO skills",
       "skills": [],
       "dependencies": [
         "etalab-anssi-guides",
