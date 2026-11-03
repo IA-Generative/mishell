@@ -4,8 +4,8 @@ Bundles de skills de l'équipe IA-Generative pour les agents de code. Ce dépôt
 skill** : il choisit lesquelles installer, chacune **épinglée par commit**, depuis
 [`agent-skills`](https://github.com/IA-Generative/agent-skills) (nos skills) et des dépôts tiers.
 
-Dépôt **interne** à l'organisation GitHub IA-Generative : être membre et connecté (`gh auth login`).
-Chaque étape s'ajoute à la précédente.
+Dépôt **public** : aucune connexion GitHub requise. Chaque étape s'ajoute à la précédente.
+Les commandes sont données pour Claude Code et pour OpenCode.
 
 ## 1. Les indispensables : principes de travail
 
@@ -30,8 +30,10 @@ Commandes OpenCode, commits revus, licences : [docs/sources-externes.md](docs/so
 ## 2. Je démarre un projet : `mishell-base`
 
 Le socle Fabrique Numérique : CI/CD, conventions, stack, API REST, déploiement.
+Sous OpenCode, ses sources n'ont pas de plugin : [docs/installation.md](docs/installation.md#sources-sans-plugin-opencode).
 
 ```bash
+# Claude Code
 claude plugin marketplace add IA-Generative/mishell
 claude plugin install mishell-base@mishell --scope local
 ```
@@ -44,8 +46,17 @@ toutes vos sessions ; `project` : partagé avec l'équipe via git).
 Audits (pen-test, red-team, RAG), DAT d'homologation, guides ANSSI, RGAA, skills DSO / Cloud Pi Native.
 
 ```bash
+# Claude Code
 claude plugin install mishell-more@mishell --scope local
 ```
+
+```json
+// OpenCode : opencode.json (audit et DAT ; DSO, ANSSI, RGAA : voir docs/installation.md)
+{ "plugin": [["agent-skills@git+https://github.com/IA-Generative/agent-skills.git",
+              { "groups": ["audit", "dat"] }]] }
+```
+
+Une seule famille, par exemple les skills DSO : [installation à la carte](docs/installation.md#à-la-carte).
 
 ## Contenu
 
@@ -56,11 +67,9 @@ claude plugin install mishell-more@mishell --scope local
 | | `etalab-ia/skills`, `dnum-mi/starter-kit-opencode` | guides ANSSI, RGAA, DSO / Cloud Pi Native |
 | `mishell-skills` | `agent-skills` (tous les groupes) | tout, dont `adr-new`, `bug-investigate`, `repo-*`, `mirai-*` |
 
-Autres agents que Claude Code, Windows, OpenCode : [docs/installation.md](docs/installation.md).
-
 ## Documentation
 
-- [docs/installation.md](docs/installation.md) : installation et mise à jour par agent
+- [docs/installation.md](docs/installation.md) : installation par agent (Claude Code, OpenCode), à la carte
 - [docs/sources-externes.md](docs/sources-externes.md) : méthodes de développement recommandées
 - [CONTRIBUTING.md](CONTRIBUTING.md) : modifier un bundle, mettre à jour un pin
 - [AGENTS.md](AGENTS.md) : invariants du dépôt

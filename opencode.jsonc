@@ -1,0 +1,113 @@
+{
+  // Exemple de configuration OpenCode pour les skills IA-Generative. À COPIER dans l'opencode.json
+  // de votre projet (ou dans ~/.config/opencode/opencode.json) : ce fichier n'installe rien.
+  // Détail et prérequis : docs/installation.md. OpenCode 1.x (en 2.x : "plugins" et "skills" changent
+  // de forme, voir https://opencode.ai/docs/migrate-v1). Relancer OpenCode après toute modification.
+  //
+  // OpenCode charge ce fichier quand on le lance DANS ce dépôt : les plugins ci-dessous sont donc
+  // commentés (rien n'est téléchargé), seules les permissions de la section 2 sont actives.
+  "$schema": "https://opencode.ai/config.json",
+
+  // ── 1. Skills : décommenter UNE voie par famille ───────────────────────────────────────────────
+  // Équivalents des plugins Claude Code de la marketplace mishell. Ne pas charger la même skill par
+  // deux voies (les noms de skills sont à plat sous OpenCode).
+  //
+  // "plugin": [
+  //
+  //   // A. Skills de l'équipe (agent-skills) = mishell-skills, mishell-audit, mishell-dat.
+  //   //    "groups" : dev, audit, repo, dat, mirai (défaut : tous).
+  //   //    "#<sha>" fige une version ; sans lui, le plugin suit main.
+  //   ["agent-skills@git+https://github.com/IA-Generative/agent-skills.git#<sha>",
+  //    { "groups": ["dev", "audit", "repo", "dat"] }],
+  //
+  //   // B. Kit Fabrique Numérique / Cloud Pi Native complet : instructions, skills, agents, commandes
+  //   //    (/livrer, /deployer-cpin). "groups" : dev, dso (défaut : dev). Suit main ;
+  //   //    "#<sha>" pour figer. Ne pas combiner avec C (skills DSO chargées deux fois).
+  //   ["starter-kit-opencode@git+https://github.com/dnum-mi/starter-kit-opencode.git",
+  //    { "groups": ["dso"] }]
+  // ],
+  //
+  // "skills": {
+  //
+  //   // C. Skills DSO seules (= starter-dso-skills), épinglées : <sha> = le commit de
+  //   //    starter-dso-skills dans .claude-plugin/marketplace.json. Garder le "/" final.
+  //   "urls": [
+  //     "https://raw.githubusercontent.com/dnum-mi/starter-kit-opencode/<sha>/.agents/skills/dso/"
+  //   ],
+  //
+  //   // D. Sources sans plugin OpenCode (fabnum-cicd, transversal-doc, etalab-ia/skills) : cloner au
+  //   //    commit épinglé, puis donner le dossier des skills (chemin absolu).
+  //   //      git clone https://github.com/dnum-mi/fabnum-cicd.git ~/skills/fabnum-cicd
+  //   //      git -C ~/skills/fabnum-cicd checkout <sha>
+  //   "paths": [
+  //     "/home/<vous>/skills/fabnum-cicd/skills"
+  //   ]
+  // },
+
+  // ── 2. Permissions : "allow" (sans demander), "ask" (demander), "deny" (interdit) ───────────────
+  // La DERNIÈRE règle qui correspond l'emporte : le "*" d'abord, les exceptions ensuite.
+  "permission": {
+    "bash": {
+      "*": "ask",
+
+      // ALLOW : lecture seule et vérifications de ce dépôt
+      "git status*": "allow",
+      "git diff*": "allow",
+      "git log*": "allow",
+      "ls*": "allow",
+      "grep *": "allow",
+      "node --test*": "allow",
+      "claude plugin validate*": "allow",
+      "opencode --version": "allow",
+      "opencode debug config*": "allow",
+      "opencode debug skill*": "allow",
+
+      // ASK : publie du travail (jamais sur main : livraison par PR)
+      "git push*": "ask",
+
+      // DENY : destructeur ou irréversible
+      "git push --force*": "deny",
+      "git push -f*": "deny",
+      "git reset --hard*": "deny",
+      "git clean*": "deny",
+      "rm -rf*": "deny",
+      "sudo*": "deny",
+      "curl * | *": "deny",
+      "wget * | *": "deny"
+    },
+
+    // Fichiers : tout lire sauf les secrets, ne modifier sans demander que la documentation.
+    "read": {
+      "*": "allow",
+      "*.env": "deny",
+      "*.env.*": "deny",
+      "*.env.example": "allow"
+    },
+    "edit": {
+      "*": "ask",
+      "README.md": "allow",
+      "docs/*.md": "allow",
+      "*.env": "deny",
+      "*.env.*": "deny"
+    },
+
+    // Réseau et dossiers hors projet : "external_directory" vaut "allow" par défaut.
+    "webfetch": "ask",
+    "external_directory": "ask",
+
+    // Skills : celles qui ne servent qu'aux projets MirAI ne partent pas sans accord.
+    "skill": {
+      "*": "allow",
+      "mirai-*": "ask"
+    }
+  }
+
+  // ── 3. Variante par agent (facultatif) : décommenter pour resserrer l'agent "build" ────────────
+  // ,"agent": {
+  //   "build": {
+  //     "permission": {
+  //       "bash": { "*": "ask", "git *": "allow", "git push*": "deny" }
+  //     }
+  //   }
+  // }
+}

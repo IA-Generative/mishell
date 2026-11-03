@@ -1,8 +1,9 @@
 # Instructions pour un agent travaillant sur ce dépôt
 
 Ce dépôt ne contient **aucune skill ni aucun script** : seulement
-`.claude-plugin/marketplace.json` (bundles Claude Code), de la documentation Markdown et un
-fichier de test (`tests/marketplace.test.mjs`). Les skills vivent dans `IA-Generative/agent-skills`
+`.claude-plugin/marketplace.json` (bundles Claude Code), de la documentation Markdown, un
+`opencode.jsonc` (exemple à copier, plugins commentés) et un fichier de test
+(`tests/marketplace.test.mjs`). Les skills vivent dans `IA-Generative/agent-skills`
 et dans des dépôts tiers.
 
 ## Invariants
@@ -14,6 +15,12 @@ et dans des dépôts tiers.
    à toutes les machines à la prochaine mise à jour.
 5. Le README s'adresse aux humains et reste court ; le détail va dans `docs/`. Une information
    vit à **un seul endroit**.
+6. **Claude Code et OpenCode sont deux agents d'installation à égalité.** Toute commande
+   d'installation donnée pour l'un est donnée pour l'autre (`claude plugin …` / bloc
+   `opencode.json`), ou la doc dit pourquoi il n'y a pas d'équivalent OpenCode. Le détail vit
+   dans `docs/installation.md` ; pas de section « autres agents » ni de renvoi vers `install.sh`.
+   OpenCode ne lit pas la marketplace : ses plugins (`agent-skills`, `starter-kit-opencode`) se
+   déclarent dans `opencode.json`, avec `groups` pour choisir (`#<sha>` pour figer).
 
 ## Avant de proposer une PR
 
