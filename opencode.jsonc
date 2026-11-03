@@ -1,48 +1,61 @@
 {
-  // Exemple de configuration OpenCode pour les skills IA-Generative. À COPIER dans l'opencode.json
-  // de votre projet (ou dans ~/.config/opencode/opencode.json) : ce fichier n'installe rien.
+  // Configuration OpenCode pour les skills IA-Generative. À COPIER dans l'opencode.json de votre
+  // projet (ou dans ~/.config/opencode/opencode.json). Par défaut : `mishell-base`, le socle
+  // Fabrique Numérique (CI/CD, conventions, stack, API REST, déploiement), épinglé par commit.
   // Détail et prérequis : docs/installation.md. OpenCode 1.x (en 2.x : "plugins" et "skills" changent
   // de forme, voir https://opencode.ai/docs/migrate-v1). Relancer OpenCode après toute modification.
   //
-  // OpenCode charge ce fichier quand on le lance DANS ce dépôt : les plugins ci-dessous sont donc
-  // commentés (rien n'est téléchargé), seules les permissions de la section 2 sont actives.
+  // OpenCode charge ce fichier aussi quand on le lance DANS ce dépôt : il télécharge alors les deux
+  // plugins de la section 1 dans son cache (rien n'est écrit dans le projet).
   "$schema": "https://opencode.ai/config.json",
 
-  // ── 1. Skills : décommenter UNE voie par famille ───────────────────────────────────────────────
+  // ── 1. Skills ──────────────────────────────────────────────────────────────────────────────────
   // Équivalents des plugins Claude Code de la marketplace mishell. Ne pas charger la même skill par
-  // deux voies (les noms de skills sont à plat sous OpenCode).
-  //
-  // "plugin": [
-  //
-  //   // A. Skills de l'équipe (agent-skills) = mishell-skills, mishell-audit, mishell-dat.
-  //   //    "groups" : dev, audit, repo, dat, mirai (défaut : tous).
-  //   //    "#<sha>" fige une version ; sans lui, le plugin suit main.
-  //   ["agent-skills@git+https://github.com/IA-Generative/agent-skills.git#<sha>",
-  //    { "groups": ["dev", "audit", "repo", "dat"] }],
-  //
-  //   // B. Kit Fabrique Numérique / Cloud Pi Native complet : instructions, skills, agents, commandes
-  //   //    (/livrer, /deployer-cpin). "groups" : dev, dso (défaut : dev). Suit main ;
-  //   //    "#<sha>" pour figer. Ne pas combiner avec C (skills DSO chargées deux fois).
-  //   ["starter-kit-opencode@git+https://github.com/dnum-mi/starter-kit-opencode.git",
-  //    { "groups": ["dso"] }]
-  // ],
-  //
-  // "skills": {
-  //
-  //   // C. Skills DSO seules (= starter-dso-skills), épinglées : <sha> = le commit de
-  //   //    starter-dso-skills dans .claude-plugin/marketplace.json. Garder le "/" final.
-  //   "urls": [
-  //     "https://raw.githubusercontent.com/dnum-mi/starter-kit-opencode/<sha>/.agents/skills/dso/"
-  //   ],
-  //
-  //   // D. Sources sans plugin OpenCode (fabnum-cicd, transversal-doc, etalab-ia/skills) : cloner au
-  //   //    commit épinglé, puis donner le dossier des skills (chemin absolu).
-  //   //      git clone https://github.com/dnum-mi/fabnum-cicd.git ~/skills/fabnum-cicd
-  //   //      git -C ~/skills/fabnum-cicd checkout <sha>
-  //   "paths": [
-  //     "/home/<vous>/skills/fabnum-cicd/skills"
-  //   ]
-  // },
+  // deux voies (les noms de skills sont à plat sous OpenCode). Les "#<sha>" ci-dessous sont ceux de
+  // .claude-plugin/marketplace.json (un test vérifie qu'ils restent identiques).
+  "plugin": [
+
+    // mishell-base (ACTIF) = fabnum-cicd-skills (ici, plugin) + fabnum-transversal-skills (plus bas,
+    // dans "skills.urls" : le plugin transversal-doc installerait tout le site de documentation).
+    "fabnum-cicd@git+https://github.com/dnum-mi/fabnum-cicd.git#a8a75a378a3e6ef70a51081bc6d4c07da229ac69"
+
+    // ── Compléments : décommenter (et ajouter une virgule à l'entrée qui précède) ──
+    //
+    // A. Skills de l'équipe (agent-skills) = mishell-agent-skills (audit, dat, mirai) ; sans "groups", tout (dont dev, repo).
+    //    "groups" : dev, audit, repo, dat, mirai (défaut : tous). "#<sha>" fige une version ;
+    //    sans lui, le plugin suit main.
+    // ,["agent-skills@git+https://github.com/IA-Generative/agent-skills.git#<sha>",
+    //   { "groups": ["audit", "dat", "mirai"] }]
+    //
+    // B. Kit Fabrique Numérique / Cloud Pi Native complet : instructions, skills, agents, commandes
+    //    (/livrer, /deployer-cpin). "groups" : dev, dso (défaut : dev). Suit main ; "#<sha>" pour
+    //    figer. Ne pas combiner avec C (skills DSO chargées deux fois).
+    // ,["starter-kit-opencode@git+https://github.com/dnum-mi/starter-kit-opencode.git",
+    //   { "groups": ["dso"] }]
+  ],
+
+  // Skills chargées par URL : OpenCode lit l'index.json du dossier et les met dans son cache.
+  // Garder le "/" final. Le "<sha>" est celui de la marketplace (un test le vérifie).
+  "skills": {
+    "urls": [
+      // mishell-base (ACTIF), moitié transversal-doc.
+      "https://raw.githubusercontent.com/dnum-mi/transversal-doc/4c2e2a75b20970fee64471f634e9dc7c9cb5e64d/.agents/skills/"
+
+      // ── Complément C (décommenter, avec la virgule qui précède) : skills DSO seules
+      //    (= starter-dso-skills), <sha> = le commit de starter-dso-skills dans marketplace.json.
+      // ,"https://raw.githubusercontent.com/dnum-mi/starter-kit-opencode/<sha>/.agents/skills/dso/"
+    ]
+
+    // ── Complément D (décommenter, avec la virgule qui précède) : guides ANSSI et RGAA
+    //    (etalab-ia/skills), sans plugin ni index : cloner au commit épinglé, puis donner les
+    //    dossiers de skills (chemins absolus).
+    //      git clone https://github.com/etalab-ia/skills.git ~/skills/etalab
+    //      git -C ~/skills/etalab checkout <sha>
+    // ,"paths": [
+    //   "/home/<vous>/skills/etalab/skills/anssi-guides",
+    //   "/home/<vous>/skills/etalab/skills/rgaa"
+    // ]
+  },
 
   // ── 2. Permissions : "allow" (sans demander), "ask" (demander), "deny" (interdit) ───────────────
   // La DERNIÈRE règle qui correspond l'emporte : le "*" d'abord, les exceptions ensuite.

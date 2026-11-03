@@ -8,8 +8,8 @@
   },
   "plugins": [
     {
-      "name": "mishell-skills",
-      "description": "Toutes les skills de IA-Generative/agent-skills : dev, audit, repo, dat, mirai",
+      "name": "mishell-agent-skills",
+      "description": "Skills d'IA-Generative/agent-skills pour un projet qui avance : audit, DAT d'homologation, MirAI (sans les groupes dev et repo)",
       "source": {
         "source": "github",
         "repo": "IA-Generative/agent-skills",
@@ -17,34 +17,8 @@
       },
       "skills": [
         "./skills/audit",
-        "./skills/repo",
         "./skills/dat",
-        "./skills/mirai",
-        "./skills/dev"
-      ]
-    },
-    {
-      "name": "mishell-audit",
-      "description": "Skills du groupe audit de IA-Generative/agent-skills",
-      "source": {
-        "source": "github",
-        "repo": "IA-Generative/agent-skills",
-        "sha": "7abc420bccb2a410f69ae3c43aa17151b8af6a93"
-      },
-      "skills": [
-        "./skills/audit"
-      ]
-    },
-    {
-      "name": "mishell-dat",
-      "description": "Skills du groupe dat de IA-Generative/agent-skills",
-      "source": {
-        "source": "github",
-        "repo": "IA-Generative/agent-skills",
-        "sha": "7abc420bccb2a410f69ae3c43aa17151b8af6a93"
-      },
-      "skills": [
-        "./skills/dat"
+        "./skills/mirai"
       ]
     },
     {
@@ -65,7 +39,7 @@
       "source": {
         "source": "github",
         "repo": "dnum-mi/transversal-doc",
-        "sha": "6a6970e4b9ce20ce9fd9cbce884cc01a3557357e"
+        "sha": "4c2e2a75b20970fee64471f634e9dc7c9cb5e64d"
       },
       "skills": [
         "./.agents/skills"
@@ -116,14 +90,13 @@
     {
       "name": "mishell-more",
       "source": "./",
-      "description": "Compléments : audit et DAT, guides ANSSI, RGAA, skills DSO",
+      "description": "Compléments : audit, DAT et MirAI, guides ANSSI, RGAA, skills DSO",
       "skills": [],
       "dependencies": [
         "etalab-anssi-guides",
         "etalab-rgaa",
         "starter-dso-skills",
-        "mishell-audit",
-        "mishell-dat"
+        "mishell-agent-skills"
       ]
     }
   ]

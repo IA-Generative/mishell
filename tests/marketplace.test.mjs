@@ -39,6 +39,28 @@ describe('marketplace.json (hors ligne)', () => {
   })
 })
 
+describe('opencode.jsonc', () => {
+  const text = readFileSync(join(ROOT, 'opencode.jsonc'), 'utf8')
+  const shaOf = name => plugins.find(p => p.name === name).source.sha
+
+  const active = text.split('\n').filter(line => !line.trim().startsWith('//')).join('\n')
+
+  test('mishell-base est actif : fabnum-cicd en plugin, transversal-doc en skills.urls, au sha de la marketplace', () => {
+    assert.ok(
+      active.includes(`"fabnum-cicd@git+https://github.com/dnum-mi/fabnum-cicd.git#${shaOf('fabnum-cicd-skills')}"`),
+      'fabnum-cicd : entrée absente ou sha différent de fabnum-cicd-skills dans marketplace.json',
+    )
+    assert.ok(
+      active.includes(`"https://raw.githubusercontent.com/dnum-mi/transversal-doc/${shaOf('fabnum-transversal-skills')}/.agents/skills/"`),
+      'transversal-doc : URL absente ou sha différent de fabnum-transversal-skills dans marketplace.json',
+    )
+  })
+
+  test('le plugin transversal-doc n’est pas actif en plus de skills.urls (skills chargées deux fois)', () => {
+    assert.ok(!active.includes('transversal-doc@git+'))
+  })
+})
+
 // MISHELL_ONLINE=1 : le sha existe-t-il bien sur le dépôt amont ? (sinon l'installation échoue)
 describe('sources épinglées (réseau)', { skip: !process.env.MISHELL_ONLINE }, () => {
   for (const p of remote) {
@@ -65,7 +87,7 @@ describe('installation Claude Code (réseau)', { skip: !process.env.MISHELL_CLAU
 
   test('les bundles s’installent avec leurs dépendances', () => {
     claude('marketplace', 'add', ROOT)
-    for (const bundle of ['mishell-base', 'mishell-more', 'mishell-skills']) {
+    for (const bundle of ['mishell-base', 'mishell-more']) {
       claude('install', `${bundle}@${marketplace.name}`, '--scope', 'user')
     }
   })

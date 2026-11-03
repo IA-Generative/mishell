@@ -30,7 +30,8 @@ Commandes OpenCode, commits revus, licences : [docs/sources-externes.md](docs/so
 ## 2. Je démarre un projet : `mishell-base`
 
 Le socle Fabrique Numérique : CI/CD, conventions, stack, API REST, déploiement.
-Sous OpenCode, ses sources n'ont pas de plugin : [docs/installation.md](docs/installation.md#sources-sans-plugin-opencode).
+Sous OpenCode : copier [opencode.jsonc](opencode.jsonc) dans votre `opencode.json` (`mishell-base` y est actif
+par défaut ; détail dans [docs/installation.md](docs/installation.md#opencode)).
 
 ```bash
 # Claude Code
@@ -43,7 +44,7 @@ toutes vos sessions ; `project` : partagé avec l'équipe via git).
 
 ## 3. Le projet avance : `mishell-more`
 
-Audits (pen-test, red-team, RAG), DAT d'homologation, guides ANSSI, RGAA, skills DSO / Cloud Pi Native.
+Audits (pen-test, red-team, RAG), DAT d'homologation, MirAI, guides ANSSI, RGAA, skills DSO / Cloud Pi Native.
 
 ```bash
 # Claude Code
@@ -51,9 +52,9 @@ claude plugin install mishell-more@mishell --scope local
 ```
 
 ```json
-// OpenCode : opencode.json (audit et DAT ; DSO, ANSSI, RGAA : voir docs/installation.md)
+// OpenCode : opencode.json (audit, DAT, MirAI ; DSO, ANSSI, RGAA : voir docs/installation.md)
 { "plugin": [["agent-skills@git+https://github.com/IA-Generative/agent-skills.git",
-              { "groups": ["audit", "dat"] }]] }
+              { "groups": ["audit", "dat", "mirai"] }]] }
 ```
 
 Une seule famille, par exemple les skills DSO : [installation à la carte](docs/installation.md#à-la-carte).
@@ -63,9 +64,8 @@ Une seule famille, par exemple les skills DSO : [installation à la carte](docs/
 | Bundle | Source | Skills |
 |---|---|---|
 | `mishell-base` | `dnum-mi/fabnum-cicd`, `dnum-mi/transversal-doc` | CI/CD, conventions, stack, API REST, déploiement |
-| `mishell-more` | `agent-skills` (groupes `audit`, `dat`) | `audit-repo-ouverture`, `audit-pentest-prep`, `audit-redteam`, `audit-rag`, `audit-tool-owui`, `dat-generation`, `dat-word` |
+| `mishell-more` | `agent-skills` (groupes `audit`, `dat`, `mirai`) | `audit-repo-ouverture`, `audit-pentest-prep`, `audit-redteam`, `audit-rag`, `audit-tool-owui`, `dat-generation`, `dat-word`, `mirai-check-service-names`, `mirai-smoke-test` |
 | | `etalab-ia/skills`, `dnum-mi/starter-kit-opencode` | guides ANSSI, RGAA, DSO / Cloud Pi Native |
-| `mishell-skills` | `agent-skills` (tous les groupes) | tout, dont `adr-new`, `bug-investigate`, `repo-*`, `mirai-*` |
 
 ## Documentation
 

@@ -28,6 +28,5 @@ on modifie la **composition des bundles** ([`.claude-plugin/marketplace.json`](.
 
 ## Mettre à jour le pin d'agent-skills
 
-Les plugins `mishell-skills`, `mishell-audit` et `mishell-dat` pointent vers un commit
-d'`agent-skills`. Après une fusion qui ajoute ou modifie une skill là-bas, repointer le `sha`
+Le plugin `mishell-agent-skills` pointe vers un commit d'`agent-skills`. Après une fusion qui ajoute ou modifie une skill là-bas, repointer le `sha`
 vers le nouveau commit de `main` de ce dépôt.

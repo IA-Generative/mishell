@@ -15,8 +15,7 @@ Le même contenu se choisit sur les deux agents, par bundle ou par groupe :
 ```bash
 claude plugin marketplace add IA-Generative/mishell
 claude plugin install mishell-base@mishell     # socle Fabrique Numérique
-claude plugin install mishell-more@mishell     # sécurité, homologation, CPiN (facultatif)
-claude plugin install mishell-skills@mishell   # toutes les skills d'agent-skills (facultatif)
+claude plugin install mishell-more@mishell     # audit, homologation, ANSSI, RGAA, CPiN (facultatif)
 ```
 
 - `marketplace add` n'enregistre que le catalogue : aucune skill n'est chargée avant `install`.
@@ -34,18 +33,26 @@ nos skills ; prérequis : OpenCode ≥ 1.18, `git` et un accès à github.com. T
 1.18.35 : `opencode debug config` et `opencode debug skill` listent bien les skills attendues (pas
 de session avec un modèle).
 
+Le plus simple : copier [`opencode.jsonc`](../opencode.jsonc) (à la racine de ce dépôt) dans
+l'`opencode.json` de votre projet. Il installe **`mishell-base`** par défaut, les deux sources
+épinglées par commit, avec les compléments en commentaire et des permissions prêtes à adapter :
+
 ```json
 {
   "$schema": "https://opencode.ai/config.json",
-  "plugin": [
-    ["agent-skills@git+https://github.com/IA-Generative/agent-skills.git",
-     { "groups": ["dev", "audit", "repo", "dat", "mirai"] }]
-  ]
+  "plugin": ["fabnum-cicd@git+https://github.com/dnum-mi/fabnum-cicd.git#<sha>"],
+  "skills": { "urls": ["https://raw.githubusercontent.com/dnum-mi/transversal-doc/<sha>/.agents/skills/"] }
 }
 ```
 
+`<sha>` : le commit de `fabnum-cicd-skills` (première ligne) et de `fabnum-transversal-skills`
+(seconde) dans [`.claude-plugin/marketplace.json`](../.claude-plugin/marketplace.json) (`opencode.jsonc`
+les porte déjà ; un test vérifie qu'ils restent identiques). `transversal-doc` passe par `skills.urls`
+et non par un plugin : son dépôt est un site de documentation, et le plugin ferait installer toutes ses
+dépendances. Les compléments :
+
 - **`agent-skills`** : les skills de l'équipe, par `groups` (`dev`, `audit`, `repo`, `dat`, `mirai` ;
-  défaut : tous). C'est la même chose que `mishell-skills`, `mishell-audit` et `mishell-dat`.
+  défaut : tous). `mishell-agent-skills` en est l'équivalent pour `audit`, `dat` et `mirai`.
 - **`starter-kit-opencode`** : le kit Fabrique Numérique / Cloud Pi Native, par `groups` (`dev`,
   `dso`), avec instructions, agents et commandes : [le kit DSO complet](#le-kit-dso-complet).
 - Le plugin est téléchargé par OpenCode dans son cache, rien n'est écrit dans le projet. Il
@@ -55,12 +62,8 @@ de session avec un modèle).
 - Les noms de skills sont à plat sous OpenCode : ne pas charger la même skill par deux voies
   ([doublons](#éviter-les-doublons)).
 
-Un exemple complet, avec chaque voie en commentaire et des règles de permissions `allow` / `ask` /
-`deny` prêtes à adapter, est dans [`opencode.jsonc`](../opencode.jsonc) à la racine : à copier, il
-n'installe rien tant qu'on n'y décommente pas un plugin.
-
-Les sources tierces de `mishell-base` et de `mishell-more` hors DSO (`fabnum-cicd`,
-`transversal-doc`, `etalab-ia/skills`) n'ont pas de plugin OpenCode : voir
+Les règles de permissions `allow` / `ask` / `deny` d'[`opencode.jsonc`](../opencode.jsonc) sont à
+adapter ; seul `etalab-ia/skills` (`mishell-more`) n'a pas de plugin OpenCode :
 [sources sans plugin](#sources-sans-plugin-opencode).
 
 ## À la carte
@@ -69,11 +72,9 @@ Pour ne prendre qu'une famille de skills, par exemple **DSO / Cloud Pi Native**.
 
 | Plugin Claude Code (marketplace `mishell`) | Contenu | OpenCode |
 |---|---|---|
-| `mishell-skills` | toutes les skills d'`agent-skills` | plugin `agent-skills`, sans `groups` |
-| `mishell-audit` | 5 skills d'audit : ouverture d'un dépôt, pen-test, red-team, RAG, outils OpenWebUI | plugin `agent-skills`, `"groups": ["audit"]` |
-| `mishell-dat` | 2 skills DAT d'homologation : génération, rendu `.docx` | plugin `agent-skills`, `"groups": ["dat"]` |
+| `mishell-agent-skills` | 5 skills d'audit (ouverture d'un dépôt, pen-test, red-team, RAG, outils OpenWebUI), 2 skills DAT d'homologation (génération, rendu `.docx`), 2 skills MirAI | plugin `agent-skills`, `"groups": ["audit", "dat", "mirai"]` |
 | `starter-dso-skills` | 3 skills DSO / Cloud Pi Native (CI/CD fabnum, chart Helm, déploiement) | [`skills.urls`](#skills-dso-seules) |
-| `fabnum-cicd-skills`, `fabnum-transversal-skills` | les deux moitiés du socle `mishell-base` | [sans plugin](#sources-sans-plugin-opencode) |
+| `fabnum-cicd-skills`, `fabnum-transversal-skills` | les deux moitiés du socle `mishell-base` | plugin `fabnum-cicd` (`#<sha>`) et `skills.urls` pour `transversal-doc` |
 | `etalab-anssi-guides`, `etalab-rgaa` | guides ANSSI ; référentiel RGAA | [sans plugin](#sources-sans-plugin-opencode) |
 
 `mishell-base` et `mishell-more` regroupent ces plugins. Plusieurs se combinent, sous Claude Code
@@ -124,9 +125,8 @@ combinez pas avec `starter-dso-skills` ni `mishell-more` : les skills DSO seraie
 
 ### Sources sans plugin OpenCode
 
-`fabnum-cicd`, `transversal-doc` et `etalab-ia/skills` ne publient pas de plugin OpenCode. Pour
-charger exactement la source d'un bundle, cloner le dépôt **au commit épinglé** et déclarer son
-dossier de skills :
+`etalab-ia/skills` (guides ANSSI, RGAA) ne publie pas de plugin OpenCode. Pour charger exactement
+la source d'un bundle, cloner le dépôt **au commit épinglé** et déclarer son dossier de skills :
 
 ```bash
 git clone https://github.com/<dépôt>.git <dossier> && git -C <dossier> checkout <sha>
@@ -144,9 +144,9 @@ git clone https://github.com/<dépôt>.git <dossier> && git -C <dossier> checkou
 
 Chaque skill ne doit être chargée qu'une fois :
 
-- `mishell-skills` (marketplace `mishell`) et le plugin `agent-skills` (marketplace `eric-skills`)
-  exposent les mêmes skills : en prendre un seul. `mishell-skills` est épinglé sur un commit ;
-  `agent-skills` suit `main`.
+- `mishell-agent-skills` (marketplace `mishell`) et le plugin `agent-skills` (marketplace `eric-skills`)
+  exposent les mêmes skills `audit`, `dat` et `mirai` : en prendre un seul. `mishell-agent-skills` est
+  épinglé sur un commit ; `agent-skills` suit `main` et ajoute les groupes `dev` et `repo`.
 - Sous Claude Code, le kit `dso@starter-kit` et `starter-dso-skills` / `mishell-more` ne se combinent pas.
 - Ne pas cumuler plugin et liens `install.sh` d'`agent-skills` pour un même agent.
 
