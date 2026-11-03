@@ -7,7 +7,10 @@ commented out) and a test file (`tests/marketplace.test.mjs`). The skills live i
 
 ## Invariants
 
-1. **Every external source is pinned by full `sha`.** Never a branch, never a tag.
+1. **Every source of a bundle is pinned by full `sha`**: each entry of `marketplace.json` and each
+   active entry of `opencode.jsonc`. Never a branch, never a tag. The only exceptions are optional
+   third-party kits that cannot be pinned on one agent (for example `dso@starter-kit` on Claude Code):
+   `docs/` marks them "follows `main`" and they never enter a bundle.
 2. **No install script, no hook** in this repository: that is the point.
 3. **No secrets**, no sensitive internal URL, no person's name in an example.
 4. **Delivery by PR.** Never commit directly on `main`: a bundle merged here reaches every machine

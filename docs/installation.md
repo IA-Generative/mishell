@@ -101,6 +101,23 @@ claude plugin install starter-dso-skills@mishell --scope local
 [`.claude-plugin/marketplace.json`](../.claude-plugin/marketplace.json). The folder must end with
 `/`: OpenCode reads the group's `index.json` there.
 
+### All the team's skills
+
+`agent-skills` itself, with the `dev` and `repo` groups that `mishell-agent-skills` leaves out. It is a
+plugin of its own marketplace, [`eric-skills`](https://github.com/IA-Generative/agent-skills), and it
+follows `main`.
+
+```bash
+# Claude Code
+claude plugin marketplace add IA-Generative/agent-skills
+claude plugin install agent-skills@eric-skills --scope local
+```
+
+```json
+// OpenCode: opencode.json ("groups" to choose; "#<sha>" after ".git" to pin)
+{ "plugin": ["agent-skills@git+https://github.com/IA-Generative/agent-skills.git"] }
+```
+
 ### Full DSO kit
 
 The `dso` group of [`dnum-mi/starter-kit-opencode`](https://github.com/dnum-mi/starter-kit-opencode)
@@ -143,15 +160,15 @@ git clone https://github.com/<repository>.git <folder> && git -C <folder> checko
 
 Each skill must be loaded only once:
 
-- `mishell-agent-skills` (`mishell` marketplace) and the `agent-skills` plugin (`eric-skills`
+- `mishell-agent-skills` (`mishell` marketplace) and the [`agent-skills`](#all-the-teams-skills) plugin (`eric-skills`
   marketplace) expose the same `audit`, `dat` and `mirai` skills: take only one. `mishell-agent-skills`
   is pinned to a commit; `agent-skills` follows `main` and adds the `dev` and `repo` groups.
 - On Claude Code, the `dso@starter-kit` kit and `starter-dso-skills` / `mishell-more` cannot be combined.
-- Do not combine the plugin and the `install.sh` links of `agent-skills` for the same agent.
+- Do not install the same skills both as a plugin and by hand (copy or symbolic link) for one agent.
 
 ## Pinning
 
 The sources of the bundles are **pinned by commit** (`sha` field of
 [`.claude-plugin/marketplace.json`](../.claude-plugin/marketplace.json)): nothing changes as long as
-this repository does not change. The OpenCode plugins `agent-skills` and `starter-kit-opencode` follow
-`main` unless `#<sha>` is added.
+this repository does not change. The optional kits of this page ([all the team's skills](#all-the-teams-skills),
+[the full DSO kit](#full-dso-kit)) follow `main` unless `#<sha>` is added, and are never part of a bundle.

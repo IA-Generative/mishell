@@ -14,7 +14,7 @@ the one you need.
 
 &nbsp;
 
-Four short principles based on a post by Karpathy (third-party repository, outside the bundles):
+Four short principles based on a post by Karpathy ([third-party repository](https://github.com/multica-ai/andrej-karpathy-skills), outside the bundles):
 
 ```bash
 # Claude Code
@@ -23,7 +23,8 @@ claude plugin install andrej-karpathy-skills@karpathy-skills --scope local
 ```
 
 Optional: a complete development method (TDD, debugging, review). Take only one of the two, they
-overlap: `mattpocock/skills` (pick and choose) or `obra/superpowers` (chained).
+overlap: [`mattpocock/skills`](https://github.com/mattpocock/skills) (pick and choose) or
+[`obra/superpowers`](https://github.com/obra/superpowers) (chained).
 
 ```bash
 # Claude Code
@@ -72,7 +73,8 @@ claude plugin install mishell-more@mishell --scope local
 
 ```json
 // OpenCode: opencode.json (audit, DAT, MirAI; DSO, ANSSI, RGAA: see docs/installation.md)
-{ "plugin": [["agent-skills@git+https://github.com/IA-Generative/agent-skills.git",
+// <sha>: the mishell-agent-skills commit in .claude-plugin/marketplace.json
+{ "plugin": [["agent-skills@git+https://github.com/IA-Generative/agent-skills.git#<sha>",
               { "groups": ["audit", "dat", "mirai"] }]] }
 ```
 
@@ -87,9 +89,9 @@ Only one family, for example the DSO skills: [pick and choose](docs/installation
 
 | Bundle | Source | Skills |
 |---|---|---|
-| `mishell-base` | `dnum-mi/fabnum-cicd`, `dnum-mi/transversal-doc` | CI/CD, conventions, stack, REST API, deployment |
-| `mishell-more` | `agent-skills` (groups `audit`, `dat`, `mirai`) | `audit-repo-ouverture`, `audit-pentest-prep`, `audit-redteam`, `audit-rag`, `audit-tool-owui`, `dat-generation`, `dat-word`, `mirai-check-service-names`, `mirai-smoke-test` |
-| | `etalab-ia/skills`, `dnum-mi/starter-kit-opencode` | ANSSI guides, RGAA, DSO / Cloud Pi Native |
+| `mishell-base` | [`dnum-mi/fabnum-cicd`](https://github.com/dnum-mi/fabnum-cicd), [`dnum-mi/transversal-doc`](https://github.com/dnum-mi/transversal-doc) | CI/CD, conventions, stack, REST API, deployment |
+| `mishell-more` | [`IA-Generative/agent-skills`](https://github.com/IA-Generative/agent-skills) (groups `audit`, `dat`, `mirai`) | `audit-repo-ouverture`, `audit-pentest-prep`, `audit-redteam`, `audit-rag`, `audit-tool-owui`, `dat-generation`, `dat-word`, `mirai-check-service-names`, `mirai-smoke-test` |
+| | [`etalab-ia/skills`](https://github.com/etalab-ia/skills), [`dnum-mi/starter-kit-opencode`](https://github.com/dnum-mi/starter-kit-opencode) | ANSSI guides, RGAA, DSO / Cloud Pi Native |
 
 </details>
 

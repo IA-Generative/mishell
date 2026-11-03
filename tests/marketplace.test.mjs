@@ -34,7 +34,7 @@ describe('marketplace.json (offline)', () => {
 
   test('a plugin without a remote source is a meta-plugin (empty skills)', () => {
     for (const p of plugins.filter(p => typeof p.source === 'string')) {
-      assert.deepEqual(p.skills, [], `${p.name} : source locale mais skills non vides`)
+      assert.deepEqual(p.skills, [], `${p.name}: local source but non-empty skills`)
     }
   })
 })
