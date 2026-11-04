@@ -2,8 +2,8 @@
 // Everything generated here (isolated configs, copied credentials) lives under `private/`,
 // which git ignores; the agents run in a throw-away workspace OUTSIDE the repository so that
 // neither the repository's own instructions nor its settings leak into a run.
-import { execFileSync, spawn } from 'node:child_process'
-import { chmodSync, copyFileSync, existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
+import { execFileSync, spawn, spawnSync } from 'node:child_process'
+import { chmodSync, closeSync, copyFileSync, existsSync, mkdirSync, mkdtempSync, openSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { homedir, tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -66,7 +66,7 @@ function runAgent(cmd, args, { cwd, env, onEvent }) {
       settled = true
       clearTimeout(timer)
       try { process.kill(-child.pid, 'SIGKILL') } catch { /* already gone */ }
-      resolve({ events: events.length, ...outcome })
+      resolve(outcome)
     }
     const timer = setTimeout(() => settle({ error: `timeout after ${ATTEMPT_TIMEOUT_MS / 1000}s` }), ATTEMPT_TIMEOUT_MS)
     child.stdout.on('data', chunk => {
@@ -108,7 +108,6 @@ export function setupClaude() {
 
 export async function runClaude({ env, cwd, model, query }) {
   const plugins = bundlePlugins()
-  let cost
   const outcome = await runAgent('claude', [
     '-p', query, '--model', model, '--output-format', 'stream-json', '--verbose',
     // Skill plus harmless read-only tools: with the skill as the only tool, it would always be picked.
@@ -119,7 +118,6 @@ export async function runClaude({ env, cwd, model, query }) {
     env,
     onEvent(event) {
       if (event.type === 'result') {
-        cost = event.total_cost_usd
         return event.is_error ? { error: `result error: ${String(event.result).slice(0, 200)}` } : { invoked: null }
       }
       for (const part of event.type === 'assistant' ? event.message.content : []) {
@@ -129,11 +127,11 @@ export async function runClaude({ env, cwd, model, query }) {
   })
   // `plugin:skill` for a skill of the bundle; Claude Code's own skills carry no prefix.
   const triggered = Boolean(outcome.invoked?.includes(':') && plugins.has(outcome.invoked.split(':')[0]))
-  return { ...outcome, triggered, cost }
+  return { ...outcome, triggered }
 }
 
 // ── OpenCode ────────────────────────────────────────────────────────────────────────────────────
-// `base` holds the four XDG directories; `provider` is a model id (`provider/model`) whose provider
+// `base` holds the four XDG directories; `model` is a model id (`provider/model`) whose provider
 // block is copied from the user's own OpenCode config into the isolated one, and nothing else.
 export function setupOpenCode({ base, model } = {}) {
   const dir = base ?? mkdtempSync(join(tmpdir(), 'mishell-opencode-'))
@@ -178,12 +176,31 @@ export function workspaceForOpenCode() {
   return ws
 }
 
-export function listOpenCodeSkills({ env, cwd }) {
-  const out = execFileSync('opencode', ['debug', 'skill'], {
-    env, cwd, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'], timeout: 300_000, maxBuffer: 64 * 1024 * 1024,
-  })
-  return JSON.parse(out.slice(out.indexOf('[')))
+// `opencode debug skill` already de-duplicates by name (the first one found wins), so a duplicate
+// can only be seen in its logs: `duplicate skill name`, on stderr with --print-logs.
+export function openCodeSkills({ env, cwd }) {
+  // The listing goes to a file, not a pipe: on a pipe, OpenCode cuts a large listing short.
+  const dir = mkdtempSync(join(tmpdir(), 'mishell-skills-'))
+  const outFile = join(dir, 'skills.json')
+  const out = openSync(outFile, 'w')
+  try {
+    const run = spawnSync('opencode', ['debug', 'skill', '--print-logs'], {
+      env, cwd, encoding: 'utf8', timeout: 300_000, maxBuffer: 64 * 1024 * 1024, stdio: ['ignore', out, 'pipe'],
+    })
+    if (run.status !== 0) throw new Error(`opencode debug skill failed (${run.status ?? run.signal}): ${run.stderr.slice(-300)}`)
+    const listing = readFileSync(outFile, 'utf8')
+    const log = run.stderr.replace(/\x1b\[[0-9;]*m/g, '')
+    return {
+      skills: JSON.parse(listing.slice(listing.indexOf('['))),
+      duplicates: [...log.matchAll(/message="duplicate skill name" name=(\S+)/g)].map(m => m[1]),
+    }
+  } finally {
+    closeSync(out)
+    rmSync(dir, { recursive: true, force: true })
+  }
 }
+
+export const listOpenCodeSkills = options => openCodeSkills(options).skills
 
 export async function runOpenCode({ env, cwd, model, query, skills }) {
   const known = new Set(skills.filter(s => s.location !== '<built-in>').map(s => s.name))
@@ -212,7 +229,7 @@ export const passes = (shouldTrigger, rate) => (shouldTrigger ? rate > THRESHOLD
 
 // An attempt that ends in an error (provider hiccup, timeout) is replayed once, then left out of the
 // rate: it says nothing about triggering. With fewer than 2 valid runs left, the query is inconclusive.
-export const MIN_VALID_RUNS = 2
+const MIN_VALID_RUNS = 2
 
 export async function measure(attempt, query) {
   const once = async () => {

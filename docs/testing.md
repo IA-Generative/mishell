@@ -8,7 +8,7 @@ Without any variable, only the offline checks run. Each family below is switched
 | *(none)* | structure, full shas, dependencies, `opencode.jsonc` sha consistency, `eval_queries.json` shape | Node |
 | `MISHELL_ONLINE=1` | every pinned `sha` exists upstream | `git`, network |
 | `MISHELL_CLAUDE=1` | the Claude Code bundles install and expose skills (isolated config, no login, no model) | `claude`, network |
-| `MISHELL_OPENCODE=1` | OpenCode loads the sources of `opencode.jsonc`: skills found, none loaded twice, each source exposes some (isolated config, no login, no model) | `opencode`, network |
+| `MISHELL_OPENCODE=1` | OpenCode loads the sources of `opencode.jsonc` (isolated config, no login, no model): skills found, no name loaded twice (read from OpenCode's logs: its listing keeps only the first), each plugin exposes some, every skill of each `skills.urls` index is loaded | `opencode`, network |
 | `MISHELL_LLM=1` | the bundle is **used** when the user's intent calls for it (see below) | a model per agent |
 
 ## Do the skills get used?
@@ -30,6 +30,11 @@ node --test tests/triggers.test.mjs
 
 There is no default model: an agent whose variable is unset is skipped. Each query prints a
 `TRIGGER <agent> <hits>/<runs> … used=[…] | <query>` line, whether it passes or not.
+
+Limits per run: 90 s, and for Claude Code 5 turns and 0.25 USD (`--max-budget-usd`). A run that ends in an
+error (provider hiccup, timeout) is replayed once, then left out of the rate; with fewer than 2 valid
+runs a query is reported *inconclusive* rather than failed. `MISHELL_RUNS` changes the 3 runs and
+`MISHELL_QUERIES` points to another query file.
 
 ### How a run is isolated
 

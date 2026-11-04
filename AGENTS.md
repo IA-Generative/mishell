@@ -34,15 +34,16 @@ MISHELL_ONLINE=1 MISHELL_CLAUDE=1 MISHELL_OPENCODE=1 node --test tests/*.test.mj
 git status --short
 ```
 
-Without the variables, only the offline checks run (structure, full shas, dependencies).
+Without the variables, only the offline checks run (structure, full shas, dependencies, shape of
+`tests/eval_queries.json`).
 `MISHELL_ONLINE` verifies that every `sha` exists upstream; `MISHELL_CLAUDE` installs the bundles in
 an isolated Claude Code config (temporary `CLAUDE_CONFIG_DIR`, no login and no model call) and
 checks the skills each plugin exposes; `MISHELL_OPENCODE` does the same for OpenCode
 (`opencode debug skill`).
 
-`MISHELL_LLM=1` also sends real prompts to a model to check that the bundle is used (cost: model calls),
-with `MISHELL_CLAUDE_MODEL` and `MISHELL_OPENCODE_MODEL` (no default). It copies credentials under
-`private/` (git-ignored), never elsewhere. Details in `docs/testing.md`.
+`MISHELL_LLM=1` also sends real prompts to a model to check that the bundle is used (it costs model
+calls and copies credentials under the git-ignored `private/`): variables and details in
+`docs/testing.md`.
 
 ## Agent skills
 
