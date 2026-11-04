@@ -2,7 +2,7 @@
 
 This repository contains **no skill and no script**: only `.claude-plugin/marketplace.json`
 (Claude Code bundles), Markdown documentation, an `opencode.jsonc` (an example to copy, extras
-commented out) and a test file (`tests/marketplace.test.mjs`). The skills live in
+commented out) and tests (`tests/*.test.mjs`, Node built-ins only). The skills live in
 `IA-Generative/agent-skills` and in third-party repositories.
 
 ## Invariants
@@ -30,14 +30,19 @@ commented out) and a test file (`tests/marketplace.test.mjs`). The skills live i
 
 ```bash
 claude plugin validate .
-MISHELL_ONLINE=1 MISHELL_CLAUDE=1 node --test tests/*.test.mjs
+MISHELL_ONLINE=1 MISHELL_CLAUDE=1 MISHELL_OPENCODE=1 node --test tests/*.test.mjs
 git status --short
 ```
 
 Without the variables, only the offline checks run (structure, full shas, dependencies).
 `MISHELL_ONLINE` verifies that every `sha` exists upstream; `MISHELL_CLAUDE` installs the bundles in
 an isolated Claude Code config (temporary `CLAUDE_CONFIG_DIR`, no login and no model call) and
-checks the skills each plugin exposes.
+checks the skills each plugin exposes; `MISHELL_OPENCODE` does the same for OpenCode
+(`opencode debug skill`).
+
+`MISHELL_LLM=1` also sends real prompts to a model to check that the bundle is used (cost: model calls),
+with `MISHELL_CLAUDE_MODEL` and `MISHELL_OPENCODE_MODEL` (no default). It copies credentials under
+`private/` (git-ignored), never elsewhere. Details in `docs/testing.md`.
 
 ## Agent skills
 
