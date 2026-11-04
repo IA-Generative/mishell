@@ -21,10 +21,11 @@ change the **composition of the bundles** ([`.claude-plugin/marketplace.json`](.
 5. Check:
    ```bash
    claude plugin validate .
-   MISHELL_ONLINE=1 MISHELL_CLAUDE=1 node --test tests/*.test.mjs
+   MISHELL_ONLINE=1 MISHELL_CLAUDE=1 MISHELL_OPENCODE=1 node --test tests/*.test.mjs
    ```
-   The second check verifies that every `sha` exists upstream and that the bundles install
-   (temporary Claude Code config, without touching yours).
+   The second check verifies that every `sha` exists upstream and that the bundles install on both
+   agents (temporary configs, without touching yours). Whether the skills are actually *used* is
+   checked separately, with a real model: see [docs/testing.md](docs/testing.md).
 
 ## Update the agent-skills pin
 

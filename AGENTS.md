@@ -2,7 +2,7 @@
 
 This repository contains **no skill and no script**: only `.claude-plugin/marketplace.json`
 (Claude Code bundles), Markdown documentation, an `opencode.jsonc` (an example to copy, extras
-commented out) and a test file (`tests/marketplace.test.mjs`). The skills live in
+commented out) and tests (`tests/*.test.mjs`, Node built-ins only). The skills live in
 `IA-Generative/agent-skills` and in third-party repositories.
 
 ## Invariants
@@ -30,11 +30,31 @@ commented out) and a test file (`tests/marketplace.test.mjs`). The skills live i
 
 ```bash
 claude plugin validate .
-MISHELL_ONLINE=1 MISHELL_CLAUDE=1 node --test tests/*.test.mjs
+MISHELL_ONLINE=1 MISHELL_CLAUDE=1 MISHELL_OPENCODE=1 node --test tests/*.test.mjs
 git status --short
 ```
 
-Without the variables, only the offline checks run (structure, full shas, dependencies).
+Without the variables, only the offline checks run (structure, full shas, dependencies, shape of
+`tests/eval_queries.json`).
 `MISHELL_ONLINE` verifies that every `sha` exists upstream; `MISHELL_CLAUDE` installs the bundles in
 an isolated Claude Code config (temporary `CLAUDE_CONFIG_DIR`, no login and no model call) and
-checks the skills each plugin exposes.
+checks the skills each plugin exposes; `MISHELL_OPENCODE` does the same for OpenCode
+(`opencode debug skill`).
+
+`MISHELL_LLM=1` also sends real prompts to a model to check that the bundle is used (it costs model
+calls and copies credentials under the git-ignored `private/`): variables and details in
+`docs/testing.md`.
+
+## Agent skills
+
+### Issue tracker
+
+Issues live in GitHub Issues of `IA-Generative/mishell` (`gh` CLI). See `docs/agents/issue-tracker.md`.
+
+### Triage labels
+
+Default five-role vocabulary (`needs-triage`, `needs-info`, `ready-for-agent`, `ready-for-human`, `wontfix`). See `docs/agents/triage-labels.md`.
+
+### Domain docs
+
+Single-context: one `GLOSSARY.md` and `docs/adr/` at the repo root. See `docs/agents/domain.md`.

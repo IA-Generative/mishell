@@ -1,0 +1,18 @@
+[
+  { "query": "Je démarre un nouveau service web pour mon équipe, je veux qu'il soit propre dès le début.", "should_trigger": true },
+  { "query": "Je veux que chaque modification soit vérifiée automatiquement avant d'être fusionnée.", "should_trigger": true },
+  { "query": "Je veux publier une nouvelle version de ma librairie sans tout faire à la main.", "should_trigger": true },
+  { "query": "Our deployments keep breaking because a secret expires, how do I make this more reliable?", "should_trigger": true },
+  { "query": "Le service sécurité refuse que mon appli tourne avec trop de droits sur le serveur, que dois-je changer ?", "should_trigger": true },
+  { "query": "Mes déploiements cassent régulièrement parce que le secret expire, comment je rends ça plus fiable ?", "should_trigger": true },
+  { "query": "On a trois applications dans le même dépôt et ça devient ingérable, comment on range tout ?", "should_trigger": true },
+  { "query": "Un nouveau collègue arrive lundi sur mon projet Vue et ne sait pas où ranger ses fichiers.", "should_trigger": true },
+  { "query": "Quel code HTTP je renvoie quand quelqu'un n'a pas le droit de supprimer une commande ?", "should_trigger": true },
+  { "query": "Mon Dockerfile commence par FROM node:latest puis COPY . . — c'est acceptable pour une mise en production ?", "should_trigger": true },
+  { "query": "Écris-moi un script pour renommer mes photos de vacances par date.", "should_trigger": false },
+  { "query": "Explique-moi la différence entre une API REST et GraphQL pour un exposé.", "should_trigger": false },
+  { "query": "Peux-tu m'expliquer comment Git fonctionne en interne, pour ma culture ?", "should_trigger": false },
+  { "query": "Mon pipeline de traitement de données en Python est lent, comment l'accélérer ?", "should_trigger": false },
+  { "query": "Quelles sont les bonnes pratiques pour choisir un mot de passe personnel ?", "should_trigger": false },
+  { "query": "Aide-moi à rédiger un mail pour demander un congé.", "should_trigger": false }
+]
