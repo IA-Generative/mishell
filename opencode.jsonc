@@ -1,0 +1,92 @@
+{
+  // OpenCode configuration for the IA-Generative skills. COPY it into the opencode.json of your
+  // project (or into ~/.config/opencode/opencode.json). Default: `mishell-base`, the Fabrique
+  // Numérique foundation (CI/CD, conventions, stack, REST API, deployment), pinned by commit.
+  // Details and requirements: docs/installation.md. OpenCode 1.x (in 2.x, "plugins" and "skills"
+  // change shape, see https://opencode.ai/docs/migrate-v1). Restart OpenCode after any change.
+  //
+  // OpenCode also loads this file when it is started INSIDE this repository: it then downloads
+  // the sources of section 1 into its cache (nothing is written in the project).
+  "$schema": "https://opencode.ai/config.json",
+
+  // ── 1. Skills ──────────────────────────────────────────────────────────────────────────────────
+  // Equivalents of the Claude Code plugins of the mishell marketplace. Do not load the same skill
+  // through two routes (skill names are flat under OpenCode). The "#<sha>" below are those of
+  // .claude-plugin/marketplace.json (a test checks that they stay identical).
+  "plugin": [
+
+    // mishell-base (ENABLED) = fabnum-cicd-skills (here, as a plugin) + fabnum-transversal-skills
+    // (below, in "skills.urls": the transversal-doc plugin would install the whole documentation site).
+    "fabnum-cicd@git+https://github.com/dnum-mi/fabnum-cicd.git#a8a75a378a3e6ef70a51081bc6d4c07da229ac69"
+
+    // ── Extras: uncomment (and add a comma to the entry before) ──
+    //
+    // A. The team's skills (agent-skills) = mishell-agent-skills (audit, dat, mirai); without
+    //    "groups", everything (including dev and repo). "groups": dev, audit, repo, dat, mirai
+    //    (default: all). "#<sha>" pins a version; without it, the plugin follows main.
+    // ,["agent-skills@git+https://github.com/IA-Generative/agent-skills.git#<sha>",
+    //   { "groups": ["audit", "dat", "mirai"] }]
+    //
+    // B. Full Fabrique Numérique / Cloud Pi Native kit: instructions, skills, agents, commands
+    //    (/livrer, /deployer-cpin). "groups": dev, dso (default: dev). Follows main; "#<sha>" to
+    //    pin. Do not combine with C (DSO skills loaded twice).
+    // ,["starter-kit-opencode@git+https://github.com/dnum-mi/starter-kit-opencode.git",
+    //   { "groups": ["dso"] }]
+  ],
+
+  // Skills loaded by URL: OpenCode reads the folder's index.json and caches them.
+  // Keep the trailing "/". The "<sha>" is the marketplace one (a test checks it).
+  "skills": {
+    "urls": [
+      // mishell-base (ENABLED), transversal-doc half.
+      "https://raw.githubusercontent.com/dnum-mi/transversal-doc/4c2e2a75b20970fee64471f634e9dc7c9cb5e64d/.agents/skills/"
+
+      // ── Extra C (uncomment, with the comma before): DSO skills only
+      //    (= starter-dso-skills), <sha> = the starter-dso-skills commit in marketplace.json.
+      // ,"https://raw.githubusercontent.com/dnum-mi/starter-kit-opencode/<sha>/.agents/skills/dso/"
+    ]
+
+    // ── Extra D (uncomment, with the comma before): ANSSI guides and RGAA (etalab-ia/skills),
+    //    no plugin and no index: clone at the pinned commit, then give the skills folders
+    //    (absolute paths).
+    //      git clone https://github.com/etalab-ia/skills.git ~/skills/etalab
+    //      git -C ~/skills/etalab checkout <sha>
+    // ,"paths": [
+    //   "/home/<you>/skills/etalab/skills/anssi-guides",
+    //   "/home/<you>/skills/etalab/skills/rgaa"
+    // ]
+  },
+
+  // ── 2. Permissions: "allow" (no prompt), "ask" (prompt), "deny" (forbidden) ─────────────────────
+  // The LAST matching rule wins: the "*" first, the exceptions after.
+  "permission": {
+    "bash": {
+      "*": "ask",
+
+      // ALLOW: read-only commands
+      "git status*": "allow",
+      "git diff*": "allow",
+      "git log*": "allow",
+      "ls*": "allow",
+      "grep *": "allow",
+
+      // DENY: destructive or irreversible
+      "git push --force*": "deny",
+      "git push -f*": "deny",
+      "git reset --hard*": "deny",
+      "rm -rf*": "deny",
+      "sudo*": "deny",
+      "curl * | *": "deny"
+    },
+
+    // Secrets: never read or edited.
+    "read": { "*.env": "deny", "*.env.*": "deny", "*.env.example": "allow" },
+    "edit": { "*.env": "deny", "*.env.*": "deny" },
+
+    // Folders outside the project ("allow" by default).
+    "external_directory": "ask",
+
+    // Skills used only by MirAI projects do not run without approval.
+    "skill": { "mirai-*": "ask" }
+  }
+}

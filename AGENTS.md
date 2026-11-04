@@ -1,29 +1,60 @@
-# Instructions pour un agent travaillant sur ce dépôt
+# Instructions for an agent working on this repository
 
-Ce dépôt ne contient **aucune skill ni aucun script** : seulement
-`.claude-plugin/marketplace.json` (bundles Claude Code), de la documentation Markdown et un
-fichier de test (`tests/marketplace.test.mjs`). Les skills vivent dans `IA-Generative/agent-skills`
-et dans des dépôts tiers.
+This repository contains **no skill and no script**: only `.claude-plugin/marketplace.json`
+(Claude Code bundles), Markdown documentation, an `opencode.jsonc` (an example to copy, extras
+commented out) and tests (`tests/*.test.mjs`, Node built-ins only). The skills live in
+`IA-Generative/agent-skills` and in third-party repositories.
 
 ## Invariants
 
-1. **Toute source externe est épinglée par `sha` complet.** Jamais de branche, jamais de tag.
-2. **Pas de script d'installation, pas de hook** dans ce dépôt : c'est le but.
-3. **Pas de secrets**, aucune URL interne sensible, aucun nom de personne dans un exemple.
-4. **Livraison par PR.** Jamais de commit direct sur `main` : un bundle fusionné ici se propage
-   à toutes les machines à la prochaine mise à jour.
-5. Le README s'adresse aux humains et reste court ; le détail va dans `docs/`. Une information
-   vit à **un seul endroit**.
+1. **Every source of a bundle is pinned by full `sha`**: each entry of `marketplace.json` and each
+   active entry of `opencode.jsonc`. Never a branch, never a tag. The only exceptions are optional
+   third-party kits that cannot be pinned on one agent (for example `dso@starter-kit` on Claude Code):
+   `docs/` marks them "follows `main`" and they never enter a bundle.
+2. **No install script, no hook** in this repository: that is the point.
+3. **No secrets**, no sensitive internal URL, no person's name in an example.
+4. **Delivery by PR.** Never commit directly on `main`: a bundle merged here reaches every machine
+   at the next update.
+5. The README is for humans and stays short; the detail goes in `docs/`. A piece of information
+   lives in **one place only**.
+6. **Claude Code and OpenCode are two equal installation agents.** Every installation command given
+   for one is given for the other (`claude plugin …` / `opencode.json` block), or the docs say why
+   there is no OpenCode equivalent. The detail lives in `docs/installation.md`; no "other agents"
+   section and no link to `install.sh`. OpenCode does not read the marketplace: its plugins
+   (`agent-skills`, `starter-kit-opencode`) are declared in `opencode.json`, with `groups` to choose
+   (`#<sha>` to pin).
+7. **Documentation and comments are written in English.** Skill names (`audit-repo-ouverture`, …)
+   stay as published upstream.
 
-## Avant de proposer une PR
+## Before proposing a PR
 
 ```bash
 claude plugin validate .
-MISHELL_ONLINE=1 MISHELL_CLAUDE=1 node --test tests/*.test.mjs
+MISHELL_ONLINE=1 MISHELL_CLAUDE=1 MISHELL_OPENCODE=1 node --test tests/*.test.mjs
 git status --short
 ```
 
-Sans les variables, seuls les contrôles hors ligne tournent (structure, sha complets,
-dépendances). `MISHELL_ONLINE` vérifie que chaque `sha` existe en amont ; `MISHELL_CLAUDE`
-installe les bundles dans une config Claude Code isolée (`CLAUDE_CONFIG_DIR` temporaire, ni login
-ni appel modèle) et contrôle les skills exposées par chaque plugin.
+Without the variables, only the offline checks run (structure, full shas, dependencies, shape of
+`tests/eval_queries.json`).
+`MISHELL_ONLINE` verifies that every `sha` exists upstream; `MISHELL_CLAUDE` installs the bundles in
+an isolated Claude Code config (temporary `CLAUDE_CONFIG_DIR`, no login and no model call) and
+checks the skills each plugin exposes; `MISHELL_OPENCODE` does the same for OpenCode
+(`opencode debug skill`).
+
+`MISHELL_LLM=1` also sends real prompts to a model to check that the bundle is used (it costs model
+calls and copies credentials under the git-ignored `private/`): variables and details in
+`docs/testing.md`.
+
+## Agent skills
+
+### Issue tracker
+
+Issues live in GitHub Issues of `IA-Generative/mishell` (`gh` CLI). See `docs/agents/issue-tracker.md`.
+
+### Triage labels
+
+Default five-role vocabulary (`needs-triage`, `needs-info`, `ready-for-agent`, `ready-for-human`, `wontfix`). See `docs/agents/triage-labels.md`.
+
+### Domain docs
+
+Single-context: one `GLOSSARY.md` and `docs/adr/` at the repo root. See `docs/agents/domain.md`.
