@@ -180,7 +180,7 @@ export function workspaceForOpenCode() {
 // can only be seen in its logs: `duplicate skill name`, on stderr with --print-logs.
 export function openCodeSkills({ env, cwd }) {
   // The listing goes to a file, not a pipe: on a pipe, OpenCode cuts a large listing short.
-  const dir = mkdtempSync(join(tmpdir(), 'mishell-skills-'))
+  const dir = mkdtempSync(join(tmpdir(), 'mishell-listing-'))
   const outFile = join(dir, 'skills.json')
   const out = openSync(outFile, 'w')
   try {
