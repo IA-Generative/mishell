@@ -171,6 +171,19 @@ claude plugin update mishell-base@mishell --scope local        # same scope as a
 Restart Claude Code to apply. `claude plugin list` shows the version (commit) of each plugin and of
 its dependencies.
 
+Three plugins of the first catalogue no longer exist. If you installed one of them directly (the
+bundles `mishell-base` and `mishell-more` need nothing):
+
+| Removed plugin | Replaced by |
+|---|---|
+| `mishell-audit`, `mishell-dat` | `mishell-agent-skills` (groups `audit`, `dat`, `mirai`) |
+| `mishell-skills` (all groups) | `mishell-agent-skills`, plus [`agent-skills`](#all-the-teams-skills) for the `dev` and `repo` groups, which `mishell-agent-skills` leaves out |
+
+```bash
+claude plugin uninstall mishell-audit@mishell        # or mishell-dat / mishell-skills
+claude plugin install mishell-agent-skills@mishell
+```
+
 ### OpenCode
 
 1. Edit `opencode.jsonc` from this repository, or move the `#<sha>` of your own `opencode.json` to the
