@@ -7,6 +7,21 @@ repositories listed in [What is in each bundle](#what-is-in-each-bundle).
 
 The repository is **public**: no GitHub login is required.
 
+## Requirements
+
+To install a bundle:
+
+- [Claude Code](https://claude.com/claude-code) or [OpenCode](https://opencode.ai) ≥ 1.18 (tested
+  with 1.18.35);
+- `git`, and access to github.com.
+
+To change a bundle ([CONTRIBUTING.md](CONTRIBUTING.md)):
+
+- [`gh`](https://cli.github.com), logged in: issues and pull requests;
+- Node.js, to run the tests (built-ins only, no `npm install`; tested with 24), and the CLI of
+  each agent you check. A model per agent only for `MISHELL_LLM`
+  ([docs/testing.md](docs/testing.md)).
+
 ## Install
 
 Each step builds on the previous one. Open the one you need.
