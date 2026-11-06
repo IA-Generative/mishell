@@ -7,6 +7,21 @@ repositories listed in [What is in each bundle](#what-is-in-each-bundle).
 
 The repository is **public**: no GitHub login is required.
 
+## Requirements
+
+To install a bundle:
+
+- [Claude Code](https://claude.com/claude-code) or [OpenCode](https://opencode.ai) ≥ 1.18 (tested
+  with 1.18.35);
+- `git`, and access to github.com.
+
+To change a bundle ([CONTRIBUTING.md](CONTRIBUTING.md)):
+
+- [`gh`](https://cli.github.com), logged in: issues and pull requests;
+- Node.js, to run the tests (built-ins only, no `npm install`; tested with 24), and the CLI of
+  each agent you check. A model per agent only for `MISHELL_LLM`
+  ([docs/testing.md](docs/testing.md)).
+
 ## Install
 
 Each step builds on the previous one. Open the one you need.
@@ -154,6 +169,40 @@ Only one family, for example the DSO skills: [pick and choose](docs/installation
     </tr>
   </tbody>
 </table>
+
+## To do
+
+State on 2026-11-05. Each item is a PR or an issue to open, here or upstream.
+
+- [ ] **Pin only commits that are on `main`.** Two pins point to a commit of an unmerged PR branch,
+  which disappears if the branch is deleted or rebased:
+  [`fabnum-cicd#136`](https://github.com/dnum-mi/fabnum-cicd/pull/136) (`feat/skills-catalog`, no
+  longer even a descendant of `main`) and
+  [`transversal-doc#32`](https://github.com/dnum-mi/transversal-doc/pull/32) (`feat/agent-skills#31`).
+  Merge them, then move the `sha` of `fabnum-cicd-skills` and `fabnum-transversal-skills` to the
+  merge commit on `main`.
+- [ ] **Move the `agent-skills` pin to the latest `main`.** It is 2 commits behind, among them the
+  rename of its Claude Code plugin and marketplace (`eric-skills`). Check what the rename changes
+  for `mishell-agent-skills` and for [the duplicate-skills warning](docs/installation.md#avoid-duplicates).
+- [ ] **Merge the skill repositories the bundles depend on.** Five repositories across three
+  organisations feed two bundles. `fabnum-cicd` and `transversal-doc` (both `dnum-mi`) are the
+  obvious first merge; `starter-kit-opencode` also overlaps with them (`cicd-fabnum` against
+  `fabnum-cicd-*`). The target: one source per bundle, one `sha` to move.
+- [ ] **Drop the unpinned exceptions.** `dso@starter-kit` (Claude Code) and the OpenCode kits
+  without `#<sha>` follow `main`; once `starter-kit-opencode` is merged or pinnable, the exception
+  and its "cannot be combined" warnings can go.
+- [ ] **Settle on one path for `audit`, `dat` and `mirai`.** `mishell-agent-skills` (pinned) and
+  `agent-skills@eric-skills` (follows `main`) expose the same skills and cannot be combined; for
+  example, have `agent-skills` publish a pinned subset that `mishell-more` points to.
+- [ ] **OpenCode parity for `etalab-ia/skills`.** ANSSI guides and RGAA have no OpenCode plugin yet
+  (see [docs/installation.md](docs/installation.md#sources-without-an-opencode-plugin)).
+- [ ] **Know when a pin is stale.** Nothing tells us that an upstream moved. A periodic check that
+  compares each `sha` with the head of its `main` would turn the manual update into a reminder.
+- [ ] **Replay the model tests after each repin.** `MISHELL_LLM=1` (see
+  [docs/testing.md](docs/testing.md)) costs model calls and never runs by itself; run it before
+  merging a PR that moves a `sha`, and widen `tests/eval_queries.json` as skills are added.
+- [ ] **Review the third-party sources again.** [docs/external-sources.md](docs/external-sources.md)
+  was reviewed on 2026-10-30; the Karpathy repository still has no licence.
 
 ## Documentation
 

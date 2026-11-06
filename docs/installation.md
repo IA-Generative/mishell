@@ -1,6 +1,6 @@
 # Installation
 
-The repository is **public**: no GitHub login is required. `git` must be installed.
+The repository is **public**: no GitHub login is required. Requirements: [README](../README.md#requirements).
 
 | Agent | Route |
 |---|---|
@@ -28,9 +28,8 @@ claude plugin install mishell-more@mishell     # audit, accreditation, ANSSI, RG
 ## OpenCode
 
 OpenCode does not read the `mishell` marketplace: it loads **plugins** and **skill folders** declared
-in `opencode.json` (the project's, or `~/.config/opencode/opencode.json`). Requirements: OpenCode
-≥ 1.18, `git` and access to github.com. Tested with OpenCode 1.18.35: `opencode debug config` and
-`opencode debug skill` list the expected skills (no model session).
+in `opencode.json` (the project's, or `~/.config/opencode/opencode.json`). Tested with OpenCode
+1.18.35: `opencode debug config` and `opencode debug skill` list the expected skills (no model session).
 
 The simplest way: copy [`opencode.jsonc`](../opencode.jsonc) (at the root of this repository) into the
 `opencode.json` of your project. It enables **`mishell-base`** by default, both sources pinned by
