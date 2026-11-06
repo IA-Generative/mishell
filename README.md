@@ -89,6 +89,10 @@ your sessions; `project`: shared with the team through git).
 Audits (pen-test, red-team, RAG), DAT security accreditation files, MirAI, DSO / Cloud Pi Native,
 ANSSI guides, RGAA.
 
+![Demo: deploying an app on Cloud Pi Native with the DSO skills and OpenCode](docs/assets/mishell-dso-demo.gif)
+
+The app deployed in this demo: [IA-Generative/translate-rt](https://github.com/IA-Generative/translate-rt).
+
 <details>
 <summary>Commands</summary>
 
