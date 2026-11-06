@@ -48,6 +48,8 @@ The Fabrique Numérique foundation: CI/CD, conventions, stack, REST API, deploym
 
 ![Demo: from an intention to a running app with mishell-base and OpenCode](docs/assets/mishell-base-demo.gif)
 
+The app built in this demo: [IA-Generative/mishell-demo](https://github.com/IA-Generative/mishell-demo).
+
 <details open>
 <summary>Commands</summary>
 
