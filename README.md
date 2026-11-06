@@ -93,6 +93,8 @@ ANSSI guides, RGAA.
 
 The app deployed in this demo: [IA-Generative/translate-rt](https://github.com/IA-Generative/translate-rt).
 
+The steps follow the [DSO runbook for deploying on Cloud Pi Native](https://github.com/dnum-mi/starter-kit-opencode/blob/main/docs/runbook-deploiement-cpin.md) (in French).
+
 <details>
 <summary>Commands</summary>
 
