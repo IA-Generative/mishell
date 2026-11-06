@@ -46,6 +46,8 @@ OpenCode commands, reviewed commits and licences: [docs/external-sources.md](doc
 
 The Fabrique Numérique foundation: CI/CD, conventions, stack, REST API, deployment.
 
+![Demo: from an intention to a running app with mishell-base and OpenCode](docs/assets/mishell-base-demo.gif)
+
 <details open>
 <summary>Commands</summary>
 
